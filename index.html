@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X-Recorder — Browser Screen Recorder</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23e5484d'/></svg>">
+  <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+  <header class="app-header">
+    <span class="logo-dot"></span>
+    <span class="logo-text">X-Recorder</span>
+    <span class="author-info">Created by David Gu · MIT License · 2026</span>
+  </header>
+
+  <main>
+    <!-- SETUP -->
+    <section id="screen-setup" class="screen active">
+      <div id="errorBanner" class="banner hidden"></div>
+      <h1>Record your screen &amp; camera</h1>
+      <p class="subtitle">Your screen is captured with the camera as a bubble overlay.
+        Drag the bubble below to choose where it appears.</p>
+
+      <div class="setup-panel">
+        <div class="device-row" id="cameraRow">
+          <label class="device-toggle-label" for="cameraSelect">
+            <input type="checkbox" id="cameraToggle" checked>
+            📷 Camera
+          </label>
+          <select id="cameraSelect"></select>
+        </div>
+        <div class="device-row">
+          <label class="device-toggle-label" for="micSelect">
+            <input type="checkbox" id="micToggle" checked>
+            🎤 Microphone
+          </label>
+          <select id="micSelect"></select>
+        </div>
+        <div id="setupStage">
+          <div class="setup-stage-hint">
+            <span class="hint-icon">🖥️</span>
+            <span>Your screen</span>
+          </div>
+          <div id="setupBubble" class="hidden">
+            <div class="bubble-clip">
+              <video id="thumbVideo" autoplay muted playsinline></video>
+            </div>
+            <div id="setupHandle" class="bubble-handle"></div>
+          </div>
+        </div>
+        <p class="hint">Tip: to capture system sound, pick a <strong>Chrome tab</strong> in the share
+          dialog and tick <strong>“Also share tab audio”</strong>.</p>
+        <button id="startBtn" class="btn primary big">
+          <span class="rec-glyph"></span> Start recording
+        </button>
+      </div>
+    </section>
+
+    <!-- RECORD -->
+    <section id="screen-record" class="screen">
+      <div class="stage-area">
+        <div id="stageWrap">
+          <canvas id="stage" width="1280" height="720"></canvas>
+          <div id="bubbleOverlay" class="hidden">
+            <div id="bubbleHandle" class="bubble-handle"></div>
+          </div>
+          <div id="countdownOverlay" class="hidden">
+            <div id="countdownNum">3</div>
+            <button id="cancelBtn" class="btn ghost">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div id="controlsBar" class="controls hidden">
+        <span id="recIndicator" class="rec-dot"></span>
+        <span id="timer">00:00</span>
+        <span class="divider"></span>
+        <button id="pauseBtn" class="btn">⏸ Pause</button>
+        <button id="stopBtn" class="btn danger">⏹ Stop</button>
+        <span class="divider"></span>
+        <button id="micMuteBtn" class="btn">🎤 Mic on</button>
+        <button id="sysMuteBtn" class="btn">🔊 System on</button>
+        <span class="divider" id="bubbleDivider"></span>
+        <button id="shapeBtn" class="btn">▭ Rectangle</button>
+        <button id="hideBubbleBtn" class="btn">🚫 Hide camera</button>
+      </div>
+    </section>
+
+    <!-- PREVIEW -->
+    <section id="screen-preview" class="screen">
+      <h1>Your recording</h1>
+      <video id="previewVideo" controls playsinline></video>
+      <div id="previewMeta" class="meta"></div>
+      <div class="export-panel">
+        <div class="export-row">
+          <span class="export-row-label">Resolution</span>
+          <div class="res-options">
+            <label class="res-chip">
+              <input type="radio" name="exportRes" value="1080" checked>
+              <span><strong>High</strong> · 1080p</span>
+            </label>
+            <label class="res-chip">
+              <input type="radio" name="exportRes" value="720">
+              <span><strong>Medium</strong> · 720p</span>
+            </label>
+            <label class="res-chip">
+              <input type="radio" name="exportRes" value="480">
+              <span><strong>Low</strong> · 480p</span>
+            </label>
+          </div>
+        </div>
+        <div class="export-row">
+          <span class="export-row-label">Frame rate</span>
+          <div class="res-options">
+            <label class="res-chip">
+              <input type="radio" name="exportFps" value="30" checked>
+              <span><strong>Smooth</strong> · 30 fps</span>
+            </label>
+            <label class="res-chip">
+              <input type="radio" name="exportFps" value="24">
+              <span><strong>Standard</strong> · 24 fps</span>
+            </label>
+            <label class="res-chip">
+              <input type="radio" name="exportFps" value="15">
+              <span><strong>Compact</strong> · 15 fps</span>
+            </label>
+          </div>
+        </div>
+        <div class="preview-actions">
+          <button id="exportBtn" class="btn primary big">⬇ Download MP4</button>
+          <button id="againBtn" class="btn ghost big">↺ Record again</button>
+        </div>
+        <div id="exportProgress" class="export-progress hidden">
+          <div class="progress-track"><div id="exportBarFill"></div></div>
+          <span id="exportStatus">Converting… 0%</span>
+          <button id="exportCancelBtn" class="btn">Cancel</button>
+        </div>
+        <p class="hint export-hint">Converting to MP4 takes about as long as the recording itself.
+          In a hurry? <a id="downloadLink" download>Download the original WebM</a> instantly.</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
