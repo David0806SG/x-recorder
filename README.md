@@ -47,3 +47,32 @@ Open http://localhost:8000 in Chrome (or Edge). A secure context
   running at full frame rate while the app tab is in the background.
 - Chrome's native "Stop sharing" bar ends the recording gracefully — you land
   on the preview with the recording intact.
+
+## Built with Claude Fable 5
+
+This entire app — from an empty folder to a shipped, GitHub Pages–hosted site —
+was built collaboratively with **Claude Fable 5**, the first model in
+Anthropic's Claude 5 family (a Mythos-class tier above Claude Opus), in a single
+conversation.
+
+What stood out about the process:
+
+- **Planned before coding** — explored the problem and agreed an approach before
+  writing the first module.
+- **Tested in a real browser** — drove Chrome to take screenshots, watch the
+  console, and re-import the exported video files to confirm they actually
+  played, rather than assuming the code was correct.
+- **Caught its own bugs** — found and fixed issues I never reported, including a
+  Start-button re-entrancy race and an MP4 codec-packaging problem that broke
+  QuickTime playback (`avc3` → `avc1`), both surfaced during its own
+  verification.
+- **Shipped end-to-end** — cleaned the tree, set up git, pushed the repo, and
+  enabled GitHub Pages.
+
+The result: ~2,000 lines across 9 dependency-free ES modules, shaped through
+about 14 focused requests.
+
+📊 **[Full build walkthrough & my experience (slide deck)](https://david0806sg.github.io/x-recorder/docs/Built%20Screen%20Recorder%20with%20Claude%20Fable%205%20and%20My%20Experience.html)** —
+a 12-slide deck covering the brief, architecture, iteration, and engineering
+wins. Source: [`docs/Built Screen Recorder with Claude Fable 5 and My Experience.html`](docs/Built%20Screen%20Recorder%20with%20Claude%20Fable%205%20and%20My%20Experience.html)
+(press `S` in the deck for Presenter Mode).
