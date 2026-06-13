@@ -5,6 +5,10 @@ build step, no dependencies.
 
 **▶ Live: https://david0806sg.github.io/x-recorder/** — open in Chrome and record.
 
+<p align="center">
+  <img src="docs/screenshot.png" alt="X-Recorder setup screen — pick camera and mic, then drag the camera bubble onto a mockup of your screen before recording" width="640">
+</p>
+
 ## Features
 
 - **Screen & Camera recording**: the camera is composited as a
