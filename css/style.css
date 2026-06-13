@@ -213,7 +213,6 @@ h1 { font-size: 26px; font-weight: 700; margin: 8px 0 26px; }
 .btn.ghost { background: transparent; }
 .btn.big { font-size: 16px; padding: 13px 26px; border-radius: 12px; }
 .btn.muted { background: #3b1d20; border-color: var(--red); }
-.btn.active { background: #3b1d20; border-color: var(--red); box-shadow: 0 0 0 2px rgba(229, 72, 77, 0.3); }
 
 .rec-glyph {
   width: 12px;
@@ -232,11 +231,6 @@ h1 { font-size: 26px; font-weight: 700; margin: 8px 0 26px; }
   max-width: 100%;
   line-height: 0;
 }
-
-/* Laser mode: hide the OS cursor over the preview so only the burned-in
-   laser dot shows. */
-#stageWrap.laser-active { cursor: none; }
-#stageWrap.laser-active #bubbleOverlay { cursor: none; }
 
 #stage {
   display: block;

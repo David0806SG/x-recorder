@@ -16,11 +16,6 @@ const cameraVideo = makeVideo();
 // of canvas width; height follows from shape (1:1 circle, 16:9 rectangle).
 const bubble = { x: 0.88, y: 0.80, w: 0.09, shape: 'circle', visible: true };
 
-// Laser-pointer overlay. Position is normalized 0..1; drawn on top of
-// everything so it's burned into the recording. `tick` drives a subtle pulse.
-const laser = { x: 0.5, y: 0.5, visible: false };
-let tick = 0;
-
 function makeVideo() {
   const v = document.createElement('video');
   v.muted = true;
@@ -96,14 +91,6 @@ export function getCanvasAspect() {
   return canvas ? canvas.width / canvas.height : 16 / 9;
 }
 
-export function setLaser(partial) {
-  Object.assign(laser, partial);
-}
-
-export function getLaser() {
-  return { ...laser };
-}
-
 function bubblePixelRect() {
   const w = bubble.w * canvas.width;
   const h = bubble.shape === 'circle' ? w : (w * 9) / 16;
@@ -111,7 +98,6 @@ function bubblePixelRect() {
 }
 
 function draw() {
-  tick++;
   const W = canvas.width;
   const H = canvas.height;
   ctx.fillStyle = '#000';
@@ -119,15 +105,13 @@ function draw() {
 
   if (mode === 'camera') {
     if (cameraVideo.readyState >= 2) drawCover(cameraVideo, 0, 0, W, H);
-  } else {
-    if (screenVideo.readyState >= 2) drawContain(screenVideo, 0, 0, W, H);
-    if (mode === 'screen+camera' && bubble.visible && cameraVideo.readyState >= 2) {
-      drawBubble();
-    }
+    return;
   }
 
-  // Laser sits on top of everything, including the camera bubble.
-  if (laser.visible) drawLaser();
+  if (screenVideo.readyState >= 2) drawContain(screenVideo, 0, 0, W, H);
+  if (mode === 'screen+camera' && bubble.visible && cameraVideo.readyState >= 2) {
+    drawBubble();
+  }
 }
 
 // Letterbox: the screen track's resolution can change mid-capture (e.g. the
@@ -175,33 +159,4 @@ function drawBubble() {
   ctx.lineWidth = Math.max(2, canvas.width * 0.002);
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
   ctx.stroke();
-}
-
-// Glowing red laser dot: a soft pulsing halo with a bright white-hot core.
-function drawLaser() {
-  const cx = laser.x * canvas.width;
-  const cy = laser.y * canvas.height;
-  const pulse = 0.85 + 0.15 * Math.sin(tick * 0.25);
-  const core = Math.max(5, canvas.width * 0.0045);
-  const glow = core * 5 * pulse;
-
-  ctx.save();
-  const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, glow);
-  halo.addColorStop(0, 'rgba(255, 45, 45, 0.55)');
-  halo.addColorStop(0.4, 'rgba(255, 20, 20, 0.28)');
-  halo.addColorStop(1, 'rgba(255, 0, 0, 0)');
-  ctx.fillStyle = halo;
-  ctx.beginPath();
-  ctx.arc(cx, cy, glow, 0, Math.PI * 2);
-  ctx.fill();
-
-  const center = ctx.createRadialGradient(cx, cy, 0, cx, cy, core);
-  center.addColorStop(0, 'rgba(255, 255, 255, 0.98)');
-  center.addColorStop(0.5, 'rgba(255, 90, 90, 0.97)');
-  center.addColorStop(1, 'rgba(230, 0, 0, 0.95)');
-  ctx.fillStyle = center;
-  ctx.beginPath();
-  ctx.arc(cx, cy, core, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
 }
