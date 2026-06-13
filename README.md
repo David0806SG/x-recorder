@@ -3,6 +3,8 @@
 A browser-based screen recorder (Clipchamp-style). Vanilla HTML/CSS/JS, no
 build step, no dependencies.
 
+**▶ Live: https://david0806sg.github.io/x-recorder/** — open in Chrome and record.
+
 ## Features
 
 - **Screen & Camera recording**: the camera is composited as a
