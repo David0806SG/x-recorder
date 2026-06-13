@@ -24,6 +24,7 @@ const app = {
   sysMuted: false,
   hasMic: false,
   hasSystem: false,
+  laserOn: false,
 };
 
 /* ---------- Setup screen ---------- */
@@ -271,6 +272,8 @@ function setupRecordControls(mode) {
   hideBtn.disabled = false;
   hideBtn.textContent = b.visible ? '🚫 Hide camera' : '👤 Show camera';
 
+  setLaserMode(false);
+
   const pauseBtn = $('#pauseBtn');
   pauseBtn.textContent = '⏸ Pause';
   $('#recIndicator').classList.remove('paused');
@@ -290,6 +293,34 @@ function togglePause() {
     $('#pauseBtn').textContent = '⏸ Pause';
     $('#recIndicator').classList.remove('paused');
   }
+}
+
+/* ---------- Laser pointer ---------- */
+// While laser mode is on, moving the cursor over the live stage draws a red
+// laser dot on the composite canvas — burned into the recording (WYSIWYG).
+// Mapped through the canvas's bounding rect, so CSS scaling doesn't matter.
+
+function setLaserMode(on) {
+  app.laserOn = on;
+  if (!on) compositor.setLaser({ visible: false });
+  const btn = $('#laserBtn');
+  btn.classList.toggle('active', on);
+  btn.textContent = on ? '🔴 Laser on' : '🔴 Laser';
+  $('#stageWrap').classList.toggle('laser-active', on);
+}
+
+function onStagePointerMove(e) {
+  if (!app.laserOn) return;
+  const canvas = $('#stage');
+  const r = canvas.getBoundingClientRect();
+  if (!r.width || !r.height) return;
+  const x = (e.clientX - r.left) / r.width;
+  const y = (e.clientY - r.top) / r.height;
+  compositor.setLaser({ x, y, visible: x >= 0 && x <= 1 && y >= 0 && y <= 1 });
+}
+
+function onStagePointerLeave() {
+  if (app.laserOn) compositor.setLaser({ visible: false });
 }
 
 /* ---------- MP4 export ---------- */
@@ -411,6 +442,10 @@ $('#hideBubbleBtn').addEventListener('click', () => {
   bubble.setVisible(visible);
   $('#hideBubbleBtn').textContent = visible ? '🚫 Hide camera' : '👤 Show camera';
 });
+
+$('#laserBtn').addEventListener('click', () => setLaserMode(!app.laserOn));
+$('#stageWrap').addEventListener('pointermove', onStagePointerMove);
+$('#stageWrap').addEventListener('pointerleave', onStagePointerLeave);
 
 $('#cameraSelect').addEventListener('change', updateCameraPreview);
 $('#cameraToggle').addEventListener('change', updateCameraPreview);
